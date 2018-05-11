@@ -115,7 +115,7 @@ function! go#complete#GetInfo() abort
     call add(infos, split(info, ',,')[0])
   endfor
 
-  let wordMatch = '\<' . expand("<cword>") . '\>'
+  let wordMatch = '\C\<' . expand("<cword>") . '\>'
   " escape single quotes in wordMatch before passing it to filter
   let wordMatch = substitute(wordMatch, "'", "''", "g")
   let filtered =  filter(infos, "v:val =~ '".wordMatch."'")
