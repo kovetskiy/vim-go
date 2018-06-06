@@ -97,17 +97,28 @@ endfunction
 " System runs a shell command. It will reset the shell to /bin/sh for Unix-like
 " systems if it is executable.
 function! go#util#System(str, ...) abort
-  let l:shell = &shell
-  if !go#util#IsWin() && executable('/bin/sh')
-    let &shell = '/bin/sh'
-  endif
+  let g:go_util_system_args = [a:str] + a:000
+  let g:go_util_system_output = ''
+  python << en
+import subprocess
+import vim
 
-  try
-    let l:output = call('system', [a:str] + a:000)
-    return l:output
-  finally
-    let &shell = l:shell
-  endtry
+cmd = vim.vars['go_util_system_args'][0]
+build = subprocess.Popen(
+    ['sh', '-c', cmd],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.PIPE,
+    close_fds=True
+)
+
+stdout, _ = build.communicate()
+vim.vars['go_util_system_output'] = stdout
+en
+
+  let l:output = g:go_util_system_output
+  unlet g:go_util_system_output
+  unlet g:go_util_system_args
+  return l:output
 endfunction
 
 function! go#util#ShellError() abort
