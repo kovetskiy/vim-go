@@ -174,25 +174,10 @@ function! s:fmt_cmd(bin_name, source, target)
   call add(cmd, "-w")
   call extend(cmd, split(g:go_fmt_options, " "))
 
-  if a:bin_name == "goimports"
-    " lazy check if goimports support `-srcdir`. We should eventually remove
-    " this in the future
-    if !exists('b:goimports_vendor_compatible')
-      let out = go#util#System(bin_path . " --help")
-      if out !~ "-srcdir"
-        call go#util#EchoWarning(printf("vim-go: goimports (%s) does not support srcdir. Update with: :GoUpdateBinaries", , bin_path))
-      else
-        let b:goimports_vendor_compatible = 1
-      endif
-    endif
-
-    if exists('b:goimports_vendor_compatible') && b:goimports_vendor_compatible
-      let ssl_save = &shellslash
-      set noshellslash
-      call extend(cmd, ["-srcdir", shellescape(fnamemodify(a:target, ":p"))])
-      let &shellslash = ssl_save
-    endif
-  endif
+  let ssl_save = &shellslash
+  set noshellslash
+  call extend(cmd, ["-srcdir", shellescape(fnamemodify(a:target, ":p"))])
+  let &shellslash = ssl_save
 
   call add(cmd, a:source)
   return cmd
