@@ -107,7 +107,7 @@ cmd = vim.vars['go_util_system_args'][0]
 build = subprocess.Popen(
     ['sh', '-c', cmd],
     stdout=subprocess.PIPE,
-    stderr=subprocess.PIPE,
+    stderr=subprocess.STDOUT,
     close_fds=True
 )
 
