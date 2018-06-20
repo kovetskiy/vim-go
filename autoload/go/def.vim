@@ -293,7 +293,7 @@ function! go#def#Stack(...) abort
   endif
 endfunction
 
-function s:def_job(args) abort
+function! s:def_job(args) abort
   function! s:error_info_cb(job, exit_status, data) closure
     " do not print anything during async definition search&jump
   endfunction

@@ -113,6 +113,7 @@ build = subprocess.Popen(
 
 stdout, _ = build.communicate()
 vim.vars['go_util_system_output'] = stdout
+vim.vars['go_util_system_status'] = build.returncode
 en
 
   let l:output = g:go_util_system_output
@@ -122,6 +123,9 @@ en
 endfunction
 
 function! go#util#ShellError() abort
+  if exists('g:go_util_system_status') && g:go_util_system_status > 0
+    return g:go_util_system_status
+  endif
   return v:shell_error
 endfunction
 
